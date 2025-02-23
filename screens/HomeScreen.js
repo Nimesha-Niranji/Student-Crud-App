@@ -122,11 +122,15 @@ const styles = StyleSheet.create({
     flex: 1,
     color: 'white',
     textAlign: 'center',
+    justifyContent: 'center',
     fontSize: 16,
     paddingVertical: 8,
     borderWidth: 1,
     borderColor: 'white',
+    alignSelf: 'stretch',
+    
   },
+
   button: {
     width: 150,
     height: 40,
@@ -148,6 +152,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderWidth: 1,
     borderColor: 'white',
+    alignSelf: 'stretch',
   },
   deleteButton: {
     flex: 1,
@@ -156,5 +161,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderWidth: 1,
     borderColor: 'white',
+    alignSelf: 'stretch',
   },
 });
