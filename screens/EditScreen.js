@@ -1,31 +1,68 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button } from 'react-native';
-import axios from 'axios';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Keyboard } from 'react-native';
+import { database } from '../firebase';
 
-const AddEditScreen = ({ route, navigation }) => {
-  const student = route.params?.student || { name: '', age: '', grade: '' };
+const EditScreen = ({ route, navigation }) => {
+  const { student } = route.params;
   const [name, setName] = useState(student.name);
   const [age, setAge] = useState(student.age);
   const [grade, setGrade] = useState(student.grade);
 
-  const handleSubmit = () => {
-    if (student.id) {
-      axios.put(`http://localhost:3000/students/${student.id}`, { name, age, grade })
-        .then(() => navigation.goBack());
-    } else {
-      axios.post('http://localhost:3000/students', { name, age, grade })
-        .then(() => navigation.goBack());
-    }
+  const updateStudent = () => {
+    database.ref(`/students/${student.id}`).update({
+      name,
+      age,
+      grade,
+    }).then(() => {
+      alert('Student updated successfully!');
+      navigation.goBack(); // Return to Home Screen
+    }).catch(error => {
+      alert(error.message);
+    });
   };
 
   return (
-    <View>
-      <TextInput value={name} onChangeText={setName} placeholder="Name" />
-      <TextInput value={age} onChangeText={setAge} placeholder="Age" keyboardType="numeric" />
-      <TextInput value={grade} onChangeText={setGrade} placeholder="Grade" />
-      <Button title="Save" onPress={handleSubmit} />
+    <View style={styles.container}>
+      <TextInput style={styles.input} value={name} onChangeText={setName} />
+      <TextInput style={styles.input} value={age} onChangeText={setAge} keyboardType="numeric" />
+      <TextInput style={styles.input} value={grade} onChangeText={setGrade} />
+
+      <TouchableOpacity style={styles.button} onPress={updateStudent}>
+        <Text style={styles.txtBtn}>Update Student</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
-export default AddEditScreen;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#6A0DAD',
+    justifyContent: 'center',
+  },
+  input: {
+    height: 50,
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 5,
+    marginBottom: 15,
+    paddingHorizontal: 10,
+    color: 'white',
+    fontSize: 18,
+  },
+  button: {
+    backgroundColor: '#FFC5CB',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  txtBtn: {
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
+
+export default EditScreen;
+
